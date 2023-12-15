@@ -3,6 +3,7 @@
 
 // Include the queue header
 #include "../../queue.hpp"
+#include "./new_queue.hpp"
 
 void printGreen(const std::string& message) {
     // ANSI escape code for green text: \033[1;32m
@@ -11,7 +12,7 @@ void printGreen(const std::string& message) {
 
 int main() {
     // Test Case 1: Create an empty queue
-    queue<int> myQueue;
+    NewQueue<int> myQueue;
     assert(myQueue.isEmptyQueue());
     assert(myQueue.toVector().empty());
 
