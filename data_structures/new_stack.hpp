@@ -1,7 +1,3 @@
-#ifndef NEW_STACK_HPP
-#define NEW_STACK_HPP
-
-#include "../../node.hpp"
 #include <iostream>
 #include <stdexcept>  /// for std::invalid_argument
 
@@ -11,7 +7,7 @@ class NewStack {
         using value_type = ValueType;
 
     private:
-        std::shared_ptr<Node<value_type>> stackTop = nullptr;
+        std::vector<value_type> _v;
         std::size_t size = 0;
 
         void ensureNotEmpty() const {
@@ -22,44 +18,42 @@ class NewStack {
 
     public:
         bool isEmptyStack() const {
-            return size <= 0 && stackTop == nullptr;
+            return size <= 0;
         }
 
         std::vector<value_type> toVector() const {
-            return push_all_to_vector(stackTop.get(), size);
+            std::vector<value_type> clonedVector = {_v.rbegin(), _v.rend()};
+            return clonedVector;
         }
 
 
         void push(const value_type& item) {
-            auto newNodePtr = std::make_shared<Node<value_type>>();
-            newNodePtr->data = item;
-            newNodePtr->next = stackTop;
-            stackTop = newNodePtr;
+            _v.push_back(item);
             size++;
         }
 
         value_type top() const {
-            ensureNotEmpty();
-            return stackTop.get()->data;
+            return _v.back();
         }
 
         void pop() {
             ensureNotEmpty();
-            stackTop = stackTop->next;
             size--;
+            _v.pop_back();
         }
         
         void clear() {
-            stackTop = nullptr;
+            std::vector<value_type> emptyVector;
+            _v = emptyVector;
             size = 0;
         }
 
         void display() const {
             std::cout << "Top --> ";
-            display_all(stackTop.get());
+            for (int i = size - 1; i >= 0; i--) {
+                std::cout << _v[i] << " ";
+            }
             std::cout << '\n';
             std::cout << "Size of stack: " << size << std::endl;
         }
 };
-
-#endif
