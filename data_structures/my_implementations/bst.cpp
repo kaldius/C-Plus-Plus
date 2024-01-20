@@ -1,6 +1,18 @@
 #include <iostream>
+#include <concepts>
+
+template <typename MyType>
+concept GreaterThanComparable = requires(MyType a, MyType b) {
+    { a > b } -> std::convertible_to<bool>;
+};
+
+template <typename MyType>
+concept LessThanComparable = requires(MyType a, MyType b) {
+    { a < b } -> std::convertible_to<bool>;
+};
 
 template <typename T>
+requires GreaterThanComparable<T> && LessThanComparable<T>
 class BinarySearchTree {
     private:
         struct BstNode {
@@ -205,13 +217,50 @@ class BinarySearchTree {
 template <typename T>
 void printBst(BinarySearchTree<T>* bst) {
     auto vec = bst->asVectorInOrder();
-    for (auto i : vec) {
-        std::cout << i << " ";
+    for (T i : vec) {
+        std::cout << i.toString() << " ";
     }
     std::cout << std::endl;
 }
 
 int main() {
+    struct Test {
+        int a;
+        int b;
+
+        Test() {
+            a = 0;
+            b = 0;
+        }
+
+        Test(int a, int b) {
+            this->a = a;
+            this->b = b;
+        }
+
+        std::string toString() {
+            return "[" + std::to_string(a) + " " + std::to_string(b) + "]";
+        }
+
+        bool operator<(const Test& other) const {
+            return a < other.a;
+        }
+
+        bool operator>(const Test& other) const {
+            return a > other.a;
+        }
+    };
+
+    BinarySearchTree<Test>* TestBst = new BinarySearchTree<Test>();
+    TestBst->insert(Test(1, 2));
+    TestBst->insert(Test(6, 7));
+    TestBst->insert(Test(3, 4));
+    TestBst->insert(Test(10, 11));
+    TestBst->insert(Test(-1, 11));
+
+    printBst(TestBst);
+
+    /*
     BinarySearchTree<int>* bst = new BinarySearchTree<int>();
     bst->insert(1);
     bst->insert(6);
@@ -243,5 +292,5 @@ int main() {
     printBst(bst);
     std::cout << "contains 8: " << bst->contains(8) << std::endl;
     std::cout << "size: " << bst->getSize() << std::endl;
-
+    */
 }

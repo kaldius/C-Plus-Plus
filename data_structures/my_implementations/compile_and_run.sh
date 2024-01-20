@@ -3,4 +3,4 @@ if [ -z "$1" ]; then
     return 1
 fi
 
-g++ -std=c++14 "$1.cpp" -o "$1.out" && ./"$1.out" && rm "$1.out"
+g++ -std=c++20 "$1.cpp" -o "$1.out" && ./"$1.out" && rm "$1.out"
